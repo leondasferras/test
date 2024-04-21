@@ -1,4 +1,9 @@
-export type TRequest = {
+
+type TReq = {
+  [key:string]: string
+}
+
+export type TRequest  = {
   id: string;
   createdAt: string;
   companyName: string;
@@ -7,7 +12,7 @@ export type TRequest = {
   commentary: string;
   requestStatus: string;
   atiCode: string;
-};
+} & TReq;
 
 export type TNewRequest = {
   companyName: string;
@@ -33,7 +38,11 @@ export type TableColumns = {
   name: string;
 };
 
-export const tableColumnsNames = {
+  type TColumns = {
+  [key:string]: string
+}
+
+export const tableColumnsNames:TColumns = {
   id: "Номер заявки",
   createdAt: "Дата получения",
   companyName: "Фирма клиента",

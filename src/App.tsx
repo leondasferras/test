@@ -13,8 +13,7 @@ function App() {
   const [isNewRequestModalopen, setIsNewRequestModalOpen] = useState(false);
   const [isShowModalOpen, setIsShowModalOpen] = useState(false);
   const [isEditingModal, setIsEditingModal] = useState(false);
-  const [isFilterModal, setIsFilterModal] = useState(false)
-
+  const [isFilterModal, setIsFilterModal] = useState(false);
   const [currentRequest, setCurrentRequest] = useState({});
   const [isAdminMode, setIsAdminMode] = useState(false);
   const [requests, setRequests] = useState<TRequest[] | undefined>();
@@ -148,7 +147,7 @@ function App() {
         onClose={() => {
           setIsFilterModal(false);
         }}
-        children={<FilterModal requests={requests ?? []} onFilterChanged={onFilterChanged}/>}
+        children={<FilterModal requests={requests ?? []} onFilterChanged={onFilterChanged} onClose={()=> {setIsFilterModal(false)}}/>}
       />
     </div>
   );

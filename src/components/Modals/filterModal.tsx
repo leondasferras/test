@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from "react";
-import { TextInput, Button, Select, Label } from "@gravity-ui/uikit";
+import { TextInput, Button, Select } from "@gravity-ui/uikit";
 import { RangeCalendar, RangeValue } from "@gravity-ui/date-components";
 import type { DateTime } from "@gravity-ui/date-utils";
 import "./modal.scss";
@@ -30,9 +30,11 @@ const removeDuplicateOptions = (array: Option[]) => {
 export const FilterModal = ({
   requests,
   onFilterChanged,
+  onClose
 }: {
   requests: TRequest[];
   onFilterChanged: (filter: FilterSet) => void;
+  onClose:()=>void
 }) => {
   const [filter, setFilter] = useState<FilterSet>();
 
@@ -115,7 +117,9 @@ export const FilterModal = ({
   const onFilterApply = useCallback(() => {
     if (filter) {
       onFilterChanged(filter);
+      onClose()
     }
+    onClose()
   }, [filter, onFilterChanged]);
 
   const handleFilterClear = useCallback(() => {

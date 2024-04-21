@@ -16,7 +16,6 @@ export const NewRequestModal = ({onClose}:{onClose:()=> void}) => {
     })
     
     const handleClickButton = () => {
-      console.log(formdata);
       newRequestSchema.validate(formdata)
       .then(() => createNewRequest(formdata))
       .then(onClose)
