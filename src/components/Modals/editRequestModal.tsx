@@ -3,6 +3,7 @@ import { TextInput, Button, Select } from "@gravity-ui/uikit";
 import "./modal.scss";
 import { editRequest } from "../../utilities/api";
 import { atiCodesSelector, TRequest } from "../../utilities/types";
+import { editRequestSchema } from "../../utilities/validator";
 
 export const EditRequestModal = ({
   onClose,
@@ -12,16 +13,20 @@ export const EditRequestModal = ({
   request: TRequest;
 }) => {
   const [formdata, setFormData] = useState(request);
-
   const [selectData, setSelectData] = useState("");
 
   const handleClickButton = async () => {
-    let requestData
-    if (selectData) {
-    requestData = { ...formdata, requestStatus: selectData };}
-    else requestData={...formdata}
-    await editRequest(request.id, requestData);
-    onClose();
+    try {
+      let requestData;
+      if (selectData) {
+        requestData = { ...formdata, requestStatus: selectData };
+      } else requestData = { ...formdata };
+      await editRequestSchema.validate(requestData);
+      await editRequest(request.id, requestData);
+      onClose();
+    } catch (error) {
+      alert(error);
+    }
   };
 
   const handleInputValue = (e: ChangeEvent<HTMLInputElement>) => {
@@ -69,7 +74,7 @@ export const EditRequestModal = ({
           setSelectData(e[0]);
         }}
       />
-        <TextInput
+      <TextInput
         name="atiCode"
         value={formdata.atiCode}
         label="код ATI"

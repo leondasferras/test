@@ -1,10 +1,12 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { TextInput, Button, Select } from "@gravity-ui/uikit";
 import { RangeCalendar, RangeValue } from "@gravity-ui/date-components";
 import type { DateTime } from "@gravity-ui/date-utils";
 import "./modal.scss";
 import { TRequest } from "../../utilities/types";
 import { dateFormatter } from "../../utilities/dateFormatter";
+import { filterRequestSchema } from "../../utilities/validator";
+
 
 type Option = {
   value: string;
@@ -38,17 +40,22 @@ export const FilterModal = ({
 }) => {
   const [filter, setFilter] = useState<FilterSet>();
 
+  useEffect(() => handleFilterClear(), [])
+
   const options = useMemo(() => {
+    
     const dates: Option[] = [];
     const companies: Option[] = [];
     const statuses: Option[] = [];
     const atiCodes: Option[] = [];
     const drivers: Option[] = [];
-
-    requests.forEach((r) => {
+    console.log(requests);
+    
+    
+      requests.forEach((r) => {
       dates.push({
         value: dateFormatter.format(new Date(r.createdAt)),
-        content: r.createdAt,
+        content: dateFormatter.format(new Date(r.createdAt)),
       });
       companies.push({
         value: r.companyName,
@@ -91,7 +98,7 @@ export const FilterModal = ({
 
   const handleRequestIdChanged = useCallback(
     (id: number) => {
-      if (id > 0) {
+      if (id) {
         setFilter({
           ...filter,
           requestId: id,
@@ -115,17 +122,22 @@ export const FilterModal = ({
   );
 
   const onFilterApply = useCallback(() => {
+    console.log(filter);
+    
     if (filter) {
-      onFilterChanged(filter);
-      onClose()
+      filterRequestSchema.validate(filter)
+      .then(() => onFilterChanged(filter))
+      .then(() => onClose())
+      .catch(err => alert(err))
+      
     }
-    onClose()
-  }, [filter, onFilterChanged]);
+
+  }, [filter, onFilterChanged, ]);
 
   const handleFilterClear = useCallback(() => {
     setFilter({});
     onFilterChanged({});
-  }, [onFilterApply]);
+  }, [onFilterApply,]);
 
   return (
     <div className="modal">
@@ -133,9 +145,8 @@ export const FilterModal = ({
       <TextInput
         placeholder="Введите номер заявки"
         onChange={(evt) => {
-          // TODO: need validation of number
           const eventValue = evt.target.value;
-          const id = Number.parseInt(eventValue);
+          const id:any = eventValue;
           handleRequestIdChanged(id);
         }}
       />

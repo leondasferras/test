@@ -1,7 +1,7 @@
 import "./modal.scss";
 import { tableColumnsNames, TRequest } from "../../utilities/types";
 
-export const ShowRequestModal = ({ request }: {request:TRequest}) => {
+export const ShowRequestModal = ({ request }: { request:TRequest }) => {
   return (
     <div className="modal">
       <h2>Заявка № {request.id}</h2>

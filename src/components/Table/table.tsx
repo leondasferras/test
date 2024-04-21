@@ -12,6 +12,21 @@ import {
   withTableActions,
 } from "@gravity-ui/uikit";
 
+import { TableDataItem,TableActionConfig } from "@gravity-ui/uikit";
+
+
+type TTableData = {
+  id: string;
+  createdAt: string;
+  companyName: string;
+  driverName: string;
+  driverPhoneNumber: string;
+  commentary: string;
+  requestStatus: string;
+  atiCode: JSX.Element;
+}
+
+
 const MyRequestsTable = ({
   isAdminMode,
   getRowActions,
@@ -19,11 +34,11 @@ const MyRequestsTable = ({
   requests,
 }: {
   isAdminMode: boolean,
-  getRowActions:{},
-  handleOpenRequest: (e: TRequest) => Promise<void>,
+  getRowActions:(item: TableDataItem, index: number) => TableActionConfig<TableDataItem>[],
+  handleOpenRequest: (e:TableDataItem) => Promise<void>,
   requests:TRequest[] | undefined
 }) => {
-  const [tableData, setTableData] = useState([]);
+  const [tableData, setTableData] = useState<Array<TTableData>>([]);
   const [tableColumns, setTableColumns] = useState<
     TableColumns[] | undefined
   >();
@@ -46,8 +61,8 @@ const MyRequestsTable = ({
   };
 
   const createTableData = () => {
-    if (requests) {
-      const data: any = requests.map((request: TRequest) => ({
+    if (requests && requests.length > 0) {
+      const data: TTableData[] = requests.map((request: TRequest) => ({
         ...request,
         createdAt: dateFormatter.format(new Date(request.createdAt)),
         atiCode: (
@@ -73,8 +88,8 @@ const MyRequestsTable = ({
           columns={tableColumns}
           data={tableData}
           emptyMessage="Заявок нет"
-          getRowActions={isAdminMode ? (getRowActions as any) : undefined}
-          onRowClick={isAdminMode ? (handleOpenRequest as any) : undefined}
+          getRowActions={isAdminMode ? getRowActions : undefined}
+          onRowClick={(e) => handleOpenRequest(e) }
         />
       )}
     </div>

@@ -1,4 +1,4 @@
-import { number, object, string } from "yup";
+import { number, object, string, } from "yup";
 
 const newRequestSchema = object().shape({
   companyName: string().required("Имя компании не указано"),
@@ -9,13 +9,15 @@ const newRequestSchema = object().shape({
 });
 
 
-// const editRequestSchema = object().shape()({
-//   companyName: string(),
-//   driverPhoneNumber: string(),
-//   driverName: string(),
-//   atiCode: number(),
-//   commentary: string().max(30)
-// })
+const filterRequestSchema = object().shape({
+  requestId: string().matches(/^[0-9]+$/, "Номер заявки состоит из цифр")
+  .max(5, 'Номер заявки не более 5 цифр')
+})
+
+const editRequestSchema = object().shape({
+  atiCode: number()
+})
 
 
-export  {newRequestSchema}
+
+export  {newRequestSchema, filterRequestSchema, editRequestSchema}

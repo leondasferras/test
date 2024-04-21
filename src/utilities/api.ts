@@ -25,7 +25,7 @@ export const getAllRequestsByFilter = async (
       body: JSON.stringify(request),
     });
 
-    if(response.status == 204){
+    if (response.status == 204) {
       return [];
     }
 
@@ -54,8 +54,16 @@ export const createNewRequest = async (newRequest: TNewRequest) => {
 export const findRequest = async (id: string) => {
   try {
     const response = await fetch(`${baseUrl}/requests/${id}`);
-    const data = await response.json();
-    return data;
+    if (response.status == 204) {
+      return [];
+    } else {
+      const data = await response.json();
+      if (!data) {
+        return [];
+      }
+
+      return [data];
+    }
   } catch (error) {
     console.log((error as Error).message);
   }
